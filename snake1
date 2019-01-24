@@ -1,0 +1,346 @@
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<time.h>
+#include<windows.h>
+
+#define M 10
+#define N 10
+
+char maze[10][10]={0};
+
+
+enum Direction
+{
+	up,
+	down,
+	left,
+	right
+};
+
+struct Snake
+{
+	int x;
+	int y;
+	struct Snake* next;
+};
+struct Serpent
+{
+    enum Direction dir;
+    int len;
+};
+
+struct Food
+{
+	int x;
+	int y;
+};
+
+struct Snake *head=NULL,*tail=NULL;//define the head,the end of the quene
+struct Food *food=NULL;//define a pointer to the snake;
+struct Serpent *serpent=NULL;//define the snake dir and the lenth these are all pointer
+
+void Initsnake();//ok
+void Create_map();//ok
+void Initfood();//random and ok
+void Keyboard_control();//ok 
+//void Move();
+void Insnake(int x,int y);//ok
+void Outsnake();//ok
+void Print_snake();//ok
+void Clean_snake();
+int  Eat_food();//ok
+int getit=0;
+int Game_over();
+int main()
+{
+	Create_map();
+	Initsnake();
+	while(1)
+	{
+		Keyboard_control();
+		if(Game_over())
+		{
+			Clean_snake();
+			break;
+		}
+		//Move();
+	    System('plus');//clean the windows
+	    Print_snake();
+	    sleep(100);
+	}
+	printf("Game over\n");
+	return 0;
+
+
+}
+
+void Initsnake()
+{
+	int i;
+	head=tail=(struct Snake*)malloc(sizeof(struct Snake));
+	head->next=NULL;
+	food=(struct Food*)malloc(sizeof(struct Food));
+	serpent=(struct Surpent*)malloc(sizeof(struct Snake));
+	serpent->dir=down;
+	serpent->len=4;
+	for(i=0;i<4;i++)
+	{
+		Insnake(i,0);
+	}
+
+}
+
+void Create_map(/*int maze[7][12], int M, int N*/)
+{
+	int m=0,n=0;
+	//up down
+	for(n=0;n<N-1;n++)
+	{
+		maze[0][n]='x';
+		maze[M-1][n]='x';
+
+	}
+	// left right
+	for(m=0;m<M;m++)
+	{
+		maze[m][0]='x';
+		maze[m][N-1]='x';
+	}
+	for(m=0;m<M;m++)
+	{
+		for(n=0;n<N;n++)
+		{
+			if(maze[m][n]==0)
+			{
+				printf(" ");
+			}
+		    printf("%c",maze[m][n]);		
+		}
+		printf("\n");
+	}
+
+}
+
+void Initfood()
+{
+	struct Snake *p=tail;
+	int i=1;
+	food->x=random()%10;
+	food->y=random()%10;//here need a ramdon function to finish x,y;
+	while(p!=NULL)
+	{
+		if(p->x==food->x&&p->y==food->y)
+		{
+			break;
+			i=0;
+		}
+		p=p->next;
+	}
+	if(i=0)
+	{
+		Initfood();
+		getit=1;
+	}
+
+}
+
+void Keyboard_control()
+{
+	char n;
+	int x1,y1;
+	if(kbhit())
+	{
+		n=getch();
+		switch(n)
+		{
+			case 'w':
+			{
+				if(n=='w'&&serpent->dir==down)
+			    {
+				    //printf("pleas input again");
+				    serpent->dir=down;
+				    x1=tail->x;y1=tail->y;
+				    Insnake(x1,y1);
+				    if(Eat_food()==1)
+				    {
+				    	break;
+				    }
+				    Outsnake();
+
+			    }
+			    else
+			    {
+			       serpent->dir=up;
+			       x1=tail->x;y1=tail->y-1;
+			       Insnake(x1,y1);
+			       if(Eat_food()==1)
+				   {
+				    	break;
+				   }
+			       Outsnake();
+			    }
+			    break;
+
+			}
+			case 's':
+			{
+				if(n=='s'&&serpent->dir==up)
+			    {
+				    //printf("pleas input again");
+				    serpent->dir=up;
+				    x1=tail->x;y1=tail->y;
+				    Insnake(x1,y1);
+				    if(Eat_food()==1)
+				    {
+				    	break;
+				    }
+				    Outsnake();
+			    }
+			    else
+			    {
+			    	serpent->dir=down;
+			    	x1=tail->x;y1=tail->y+1;
+			        Insnake(x1,y1);
+			        if(Eat_food()==1)
+				    {
+				    	break;
+				    }
+			        Outsnake();
+			    }
+		        break;
+
+			}
+			case 'a':
+			{
+				if(n=='a'&&serpent->dir==right)
+			    {
+				    //printf("pleas input again");
+				    x1=tail->x;y1=tail->y;
+				    serpent->dir=right;
+				    Insnake(x1,y1);
+				    if(Eat_food()==1)
+				    {
+				    	break;
+				    }
+				    Outsnake();
+			    }
+			    else
+			    {
+			        serpent->dir=right;
+			        x1=tail->x-1;y1=tail->y;
+			        Insnake(x1,y1);
+			        if(Eat_food()==1)
+				    {
+				    	break;
+				    }
+			        Outsnake();
+			    }
+			       
+			    break;
+
+			}
+			case 'd':
+			{
+				if(n=='d'&&serpent->dir==left)
+			    {
+				  //printf("pleas input again");
+				    serpent->dir=left;
+				    x1=tail->x;y1=tail->y;
+				    Insnake(x1,y1);
+				    if(Eat_food()==1)
+				    {
+				    	break;
+				    }
+				    Outsnake();
+			    }
+			    else
+			    {
+			    	serpent->dir=right;
+			    	x1=tail->x+1;y1=tail->y;
+			    	Insnake(x1,y1);
+			        if(Eat_food()==1)
+				    {
+				    	break;
+				    }
+			    	Outsnake();
+			    }	
+			    break;
+
+			}
+		}
+	}
+}
+
+void Insnake(int x,int y)
+{
+	struct Snake* p;
+	p=(struct Snake*)malloc(sizeof(struct Snake));
+	p->x=x;p->y=y;p->next=NULL;
+	tail->next=p;
+	tail=p;
+}
+
+void Outsnake()
+{
+	struct Snake*p;
+	p=head;
+	head=head->next;
+	free(p);
+}
+
+void Print_snake()
+{
+	struct Snake*p;
+	p=tail;
+	int m,n;
+	while(p!=NULL)
+	{
+		n=p->x;m=p->y;
+		maze[m][n]='x';
+		printf("%c",maze[m][n]);
+		p=p->next;
+	}
+	if(getit==1)
+	{
+		n=food->x;
+		m=food->y;
+		maze[m][n]='$';
+		printf("%c",maze[m][n]);
+	}
+}
+int Eat_food()
+{
+	if(tail->x==food->x&&tail->y==food->y)
+		{
+			getit=0;
+			return 1;
+		}
+	else
+		return 0;
+}
+
+int Game_over()
+{
+	if(tail->x==0||tail->x==9||tail->y==0||tail->y==9)
+	{
+		return 1;
+	}
+	struct Snake *p;
+	p=tail;
+	while(p!=NULL)
+	{
+		if(tail->x==p->x&&tail->y==p->y)
+		{
+			return 1;
+			break;
+		}
+		p=p->next;
+	}
+
+}
+
+/*void Clean_snake()
+{
+	struct
+}*/
